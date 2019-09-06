@@ -11,31 +11,30 @@
 
     <div class="container">
         <div class="board">
-            <div class="nav">
+            <div class="nav hide">
                 <ul>
                     <li class="active">Play</li>
-                    <li>Control</li>
                     <li>Chat</li>
                 </ul>
             </div>
 
             <div class="game">
                 <div class="card choose-type ">
-                    <input type="submit" value="CREATE A GAME" />
-                    <input type="submit" value="USE GAME TOKEN" />
+                    <input type="submit" value="CREATE A GAME" id="createGame"/>
+                    <input type="submit" value="USE GAME TOKEN" id="submitToken"/>
                 </div>
 
                 <div class="card create-game-form hide ">
                     <label>Name: <input type="text" /></label> <br />
                     <label>Secret Num: <input type="text" /></label> <br />
-                    <input type="submit" value="PLAY" />
+                    <input type="submit" value="PLAY" id="playCreate" />
                 </div>
 
-                <div class="card create-game-from token-form hide">
+                <div class="card token-form hide ">
                     <label>Token: <input type="text" /></label> <br />
                     <label>Name: <input type="text" /></label> <br />
                     <label>Secret Num: <input type="text" /></label> <br />
-                    <input type="submit" value="PLAY" />
+                    <input type="submit" value="PLAY" id="playToken"/>
                 </div>
 
                 <div class="game-board hide">
@@ -165,15 +164,11 @@
             <div class="side">
                 <div class="side-nav hide">
                     <ul>
-                        <li class="">Control</li>
-                        <li class="active">Chat</li>
+                        <li class="">Chat</li>
                     </ul>
                 </div>
 
-                <div class="control hide">
-                </div>
-
-                <div class="chat ">
+                <div class="chat hide ">
                     <div class="message-box">
                         <div class="message">
                             <div>
@@ -201,7 +196,7 @@
                         </div>
                     </div>
                     <div class="chat-input">
-                            <input type="text" />
+                            <input type="text" placeholder="write a message" />
                             <input type="submit" value="send" />
                     </div>
 
