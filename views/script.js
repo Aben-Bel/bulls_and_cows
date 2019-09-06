@@ -74,6 +74,8 @@ const adjustDisplay = ()=>{
         if (gameStarted){
             nav.classList.add("hide");
 
+            gameBoard.classList.remove("hide");
+            game.classList.remove("hide");
             sideNav.classList.remove("hide");
             chat.classList.remove("hide");
         }
