@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bulls and Cows</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="style/style.css" />
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="board">
+            <div class="nav">
+                <ul>
+                    <li class="active">Play</li>
+                    <li>Control</li>
+                    <li>Chat</li>
+                </ul>
+            </div>
+
+            <div class="game">
+                <div class="card choose-type ">
+                    <input type="submit" value="CREATE A GAME" />
+                    <input type="submit" value="USE GAME TOKEN" />
+                </div>
+
+                <div class="card create-game-form hide ">
+                    <label>Name: <input type="text" /></label> <br />
+                    <label>Secret Num: <input type="text" /></label> <br />
+                    <input type="submit" value="PLAY" />
+                </div>
+
+                <div class="card create-game-from token-form hide">
+                    <label>Token: <input type="text" /></label> <br />
+                    <label>Name: <input type="text" /></label> <br />
+                    <label>Secret Num: <input type="text" /></label> <br />
+                    <input type="submit" value="PLAY" />
+                </div>
+
+                <div class="game-board hide">
+                    <table>
+                        <tr class="first-row">
+                            <td>
+                                <table>
+                                    <tr>
+                                        <th>Guess</th>
+                                        <th>Identified</th>
+                                        <th>Position</th>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="scrollable-row">
+                                    <table>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1234</td>
+                                            <td>3</td>
+                                            <td>3</td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="submit-input">
+                        <input type="text" placeholder="guess" id="submit-input-text" />
+                        <input type="submit" value="guess" id="submit-guess" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="side">
+                <div class="side-nav hide">
+                    <ul>
+                        <li class="">Control</li>
+                        <li class="active">Chat</li>
+                    </ul>
+                </div>
+
+                <div class="control hide">
+                </div>
+
+                <div class="chat ">
+                    <div class="message-box">
+                        <div class="message">
+                            <div>
+                                <span class="user-initial">A</span>
+                                <span class="user-message">Message goes here</span>
+                            </div>
+                        </div>
+                        <div class="message">
+                            <div>
+                                <span class="user-initial">A</span>
+                                <span class="user-message">Message goes here</span>
+                            </div>
+                        </div>
+                        <div class="message">
+                            <div>
+                                <span class="user-initial">A</span>
+                                <span class="user-message">Message goes here</span>
+                            </div>
+                        </div>
+                        <div class="message">
+                            <div>
+                                <span class="user-initial">A</span>
+                                <span class="user-message">Message goes here</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                            <input type="text" />
+                            <input type="submit" value="send" />
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <script src="script/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "bulls_and_cows",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aben-Bel/bulls_and_cows.git"
+  },
+  "author": "Abenezer and Yabets",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Aben-Bel/bulls_and_cows/issues"
+  },
+  "homepage": "https://github.com/Aben-Bel/bulls_and_cows#readme",
+  "dependencies": {
+    "eslint": "^6.3.0",
+    "express": "^4.17.1"
+  }
+}

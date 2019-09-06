@@ -1,0 +1,204 @@
+/*Anything outside of media queries is for MOBILE
+  This is Mobile first approach.
+*/
+*{
+    box-sizing:border-box;
+}
+
+body{
+    background-color: lightgrey;
+    margin:0;
+    padding:0;
+    color:white;
+}
+.board{
+    height: 640px;
+    position: absolute;
+    width:80%;
+    margin:10px 10%;
+}
+.game{
+    height: 640px;
+}
+.control{
+    width:100%;
+    height: 640px;
+}
+.chat{
+    width:100%;
+    height: 640px;
+}
+.hide{
+    visibility: hidden;
+    height:0px;
+    display:none;
+}
+table {
+    width:100%;
+}
+.first-row table tr{
+    background-color: rgb(83, 17, 17);
+}
+.first-row table tr th:first-child{
+    width:50%;
+}
+.first-row table tr th:nth-child(2) th:nth-child(3){
+    width:25%;
+}
+.scrollable-row table {
+    width:100%;
+    padding: 30px 0;
+    background:rgb(236, 239, 241);
+    color: rgb(19, 12, 12);
+    border-collapse: collapse;
+}
+table tr {
+    border-color: white;
+}
+.scrollable-row table td{
+    padding:10px 5px;
+    text-align: center;
+    border-bottom: 1px solid white;
+    color: rgb(100, 50, 9);
+}
+.scrollable-row table td:first-child{
+    width:50%;
+}
+.scrollable-row table td:nth-child(2) td:nth-child(3){
+    width:25%;
+}
+.scrollable-row{
+    width:100%; 
+    height:510px;
+    overflow:auto;
+}
+
+.body-table {
+    overflow:auto;
+    height:570px;
+    width:100%;
+}
+.submit-input{
+    margin-left: 20px;
+    position: absolute;
+    bottom: 10px;
+}
+#submit-input-text{
+    padding: 6px;
+    margin-top: 8px;
+    font-size: 17px;
+    border: 1px grey solid;
+    width: 65%;
+
+}
+#submit-guess{
+    padding: 6px 10px;
+    margin-top: 8px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+    width: 25%;
+}
+.side {
+    background-color: burlywood;
+}
+ul {
+    margin:0px;
+    height: 46px;
+    background-color:darkorange;
+    border-bottom: 1px solid darkred;
+}
+ul li {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px; 
+    text-decoration: none;
+    float:left;
+}
+li:hover:not(.active) {
+    background-color:burlywood;;
+}
+.active{
+    border:1px solid darkred;
+    border-bottom: none;
+    background-color:burlywood;
+}
+
+.card{
+    color:black;
+    padding: 20px;
+    width: 270px;
+    background-color: #F7F7F7;
+    margin: 100px auto 10px;
+    border-radius: 2px;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.card input:hover{
+    border: 1px solid #b9b9b9;
+    border-top: 1px solid #a0a0a0;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.choose-type input{
+    width: 100%;
+    height: 70px;
+    display: block;
+    margin-bottom: 10px;
+}
+.create-game-form input[type="text"]{
+    float:right;
+    height: 20px;
+    margin-bottom: 10px;
+}
+.create-game-form label{
+    font-weight: bold ;
+    display: block;
+    margin-bottom: 10px;
+}
+.create-game-form input[type="submit"]{
+    width: 100%;
+    height: 35px;
+}
+
+.message {
+    color:black;
+    padding: 20px;
+    width: 100%;
+    background-color: #F7F7F7;
+    margin: 3px auto 10px;
+    border-radius: 2px solid yellow;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+.user-initial{
+    padding: 10px 15px;
+    width: 20%;
+    border: 40%;
+    background-color: rgb(235, 168, 215);
+}
+.user-message{
+    padding: 20px;
+    width: 80%;
+}
+.chat-input{
+    margin-left: 20px;
+    width:100%;
+    position: absolute;
+    bottom: 10px;
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1030px) { 
+    .game{
+        width:35%;
+        float:left;
+        border: 1px solid black;
+        padding: 2px
+    }
+    .side{
+        width:30%;
+        float:left;
+    }
+ }
