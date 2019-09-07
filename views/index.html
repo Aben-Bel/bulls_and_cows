@@ -5,6 +5,7 @@
     <title>Bulls and Cows</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="style/style.css" />
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
@@ -29,6 +30,11 @@
                     <label>Secret Num: <input type="text" /></label> <br />
                     <input type="submit" value="PLAY" id="playCreate" />
                     <input type="submit" value="CANCEL" id="cancel1" />
+                </div>
+
+                <div class="card show-token hide">
+                    <label for="tokenBox">Your token: </label>
+                    <input type="text" id="tokenBox">
                 </div>
 
                 <div class="card token-form hide ">
@@ -107,6 +113,8 @@
     </div>
 
     <script src="script/script.js"></script>
+    <script src="connect/connect.js">
+    </script>
 </body>
 
 </html>

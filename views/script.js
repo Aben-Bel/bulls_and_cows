@@ -16,6 +16,7 @@ const playToken = document.querySelector("#playToken");
 const cancel1 = document.querySelector("#cancel1");
 const cancel2 = document.querySelector("#cancel2");
 const tbody = document.querySelector("#tbody");
+const showToken = document.querySelector(".show-token");
 
 let gameStarted = false;
 
@@ -163,10 +164,11 @@ const hideEverything = () => {
 
 const startGame = ()=>{
     hideEverything();
-    gameStarted = true;
+    //gameStarted = true;
     adjustDisplay();
 
-    gameBoard.classList.remove("hide");
+    //gameBoard.classList.remove("hide");
+    showToken.classList.remove("hide");
 
 
 }
@@ -248,3 +250,6 @@ playToken.addEventListener("click", startToken);
 create.addEventListener("click", createGame );
 token.addEventListener("click", submitToken);
 window.addEventListener("resize", adjustDisplay);
+
+
+
