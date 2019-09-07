@@ -36,7 +36,11 @@ table {
     background-color: #F86624;
 }
 .first-row table tr th{
-    width:19%;
+    width:16.6%;
+}
+
+.first-row table tr th:nth-child(3){
+    border-right: 2px solid black;
 }
 .scrollable-row table {
     width:100%;
@@ -55,7 +59,14 @@ table tr {
     color: #F86624;
 }
 .scrollable-row table td{
-    width:19%;
+    width:16.6%;
+    background-color: rgb(172, 214, 243);
+}
+.scrollable-row table td:nth-child(n+4){
+    background-color: gold;
+}
+.scrollable-row table td:nth-child(3){
+    border-right: 2px solid black;
 }
 .scrollable-row{
     width:100%; 
@@ -193,7 +204,6 @@ li:hover:not(.active) {
     padding: 10px 15px;
     width: 20%;
     border: 40%;
-    background-color: rgb(235, 168, 215);
 }
 .user-message{
     padding: 20px;

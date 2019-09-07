@@ -15,8 +15,142 @@ const playCreate = document.querySelector("#playCreate");
 const playToken = document.querySelector("#playToken");
 const cancel1 = document.querySelector("#cancel1");
 const cancel2 = document.querySelector("#cancel2");
+const tbody = document.querySelector("#tbody");
 
 let gameStarted = false;
+
+const appendMessage = (userType, message) => {
+    const messageBox = document.querySelector(".message-box");
+    const color = userType === "self" ? "rgb(172, 214, 243)" : "gold"; 
+    const html = `                    
+    <div class="message">
+        <div>
+            <span class="user-initial" style="background:${color};"></span>
+            <span class="user-message">${message}</span>
+        </div>
+    </div>`
+
+    messageBox.innerHTML += html;
+}
+
+appendMessage("self", "Hello Opponent");
+appendMessage("opponent", "Hello self");
+appendMessage("self", "Test passes because we can talk");
+appendMessage("opponent", "I am glad it worked!");
+
+
+const appendIandP = (userType, guess, i, p) => {
+    lastRow = tbody.rows[tbody.children.length - 1];
+
+    if( userType === "self" && lastRow.cells[0].textContent === ''){
+        lastRow.cells[0].textContent = guess;
+        lastRow.cells[1].textContent = i;
+        lastRow.cells[2].textContent = p;
+
+    }else if( userType === "opponent" && lastRow.cells[3].textContent === ''){
+        lastRow.cells[3].textContent = guess;
+        lastRow.cells[4].textContent = i;
+        lastRow.cells[5].textContent = p;
+
+    }else if( userType === "self" && lastRow.cells[3].textContent !== '' && lastRow.cells[0].textContent !== ''){
+        let tr = document.createElement("TR");
+        let td1 = document.createElement("TD");
+        td1.textContent = guess;
+        tr.appendChild(td1);
+
+        let td2 = document.createElement("TD");
+        td2.textContent = i;
+        tr.appendChild(td2);
+
+        let td3 = document.createElement("TD");
+        td3.textContent = p;
+        tr.appendChild(td3);
+
+        let td4 = document.createElement("TD");
+        td4.textContent = '';
+        tr.appendChild(td4);
+
+        let td5 = document.createElement("TD");
+        td5.textContent = '';
+        tr.appendChild(td5);
+        
+        let td6 = document.createElement("TD");
+        td6.textContent = '';
+        tr.appendChild(td6);
+
+        tbody.appendChild(tr);
+    }else if( userType === "opponent" && lastRow.cells[3].textContent !== '' && lastRow.cells[0].textContent !== ''){
+        let tr = document.createElement("TR");
+
+        let td1 = document.createElement("TD");
+        td1.textContent = '';
+        tr.appendChild(td1);
+
+        let td2 = document.createElement("TD");
+        td2.textContent = '';
+        tr.appendChild(td2);
+
+        let td3 = document.createElement("TD");
+        td3.textContent = '';
+        tr.appendChild(td3);
+
+        let td4 = document.createElement("TD");
+        td4.textContent = guess;
+        tr.appendChild(td4);
+
+        let td5 = document.createElement("TD");
+        td5.textContent = i;
+        tr.appendChild(td5);
+
+        let td6 = document.createElement("TD");
+        td6.textContent = p;
+        tr.appendChild(td6);
+
+        tbody.appendChild(tr);
+    }else{
+        console.log("Illegal append request by ", userType);
+    }
+}
+appendIandP("self", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+appendIandP("self", "1234", '1', '1');
+appendIandP("opponent", "1234", '1', '1');
+
 
 const hideEverything = () => {
     nav.classList.add("hide");
@@ -108,6 +242,7 @@ cancel1.addEventListener("click", ()=>{
 cancel2.addEventListener("click", ()=>{
     location.reload();
 })
+
 playCreate.addEventListener("click", startGame);
 playToken.addEventListener("click", startToken);
 create.addEventListener("click", createGame );
