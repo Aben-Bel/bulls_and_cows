@@ -22,7 +22,7 @@ let gameStarted = false;
 
 const appendMessage = (userType, message) => {
     const messageBox = document.querySelector(".message-box");
-    const color = userType === "self" ? "rgb(172, 214, 243)" : "gold"; 
+    const color = userType === "self" ? "orange" : "green"; 
     const html = `                    
     <div class="message">
         <div>
@@ -33,11 +33,6 @@ const appendMessage = (userType, message) => {
 
     messageBox.innerHTML += html;
 }
-
-appendMessage("self", "Hello Opponent");
-appendMessage("opponent", "Hello self");
-appendMessage("self", "Test passes because we can talk");
-appendMessage("opponent", "I am glad it worked!");
 
 
 const appendIandP = (userType, guess, i, p) => {
@@ -116,41 +111,8 @@ appendIandP("self", "1234", '1', '1');
 appendIandP("self", "1234", '1', '1');
 appendIandP("opponent", "1234", '1', '1');
 appendIandP("opponent", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
-appendIandP("self", "1234", '1', '1');
-appendIandP("opponent", "1234", '1', '1');
+
+
 
 
 const hideEverything = () => {
@@ -243,6 +205,14 @@ cancel1.addEventListener("click", ()=>{
 })
 cancel2.addEventListener("click", ()=>{
     location.reload();
+})
+document.querySelector("#continue").addEventListener("click",()=>{
+    hideEverything();
+    gameStarted = true;
+    adjustDisplay();
+
+    gameBoard.classList.remove("hide");
+    showToken.classList.add("hide");
 })
 
 playCreate.addEventListener("click", startGame);
