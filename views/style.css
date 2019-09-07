@@ -35,11 +35,8 @@ table {
 .first-row table tr{
     background-color: #F86624;
 }
-.first-row table tr th:first-child{
-    width:50%;
-}
-.first-row table tr th:nth-child(2) th:nth-child(3){
-    width:25%;
+.first-row table tr th{
+    width:19%;
 }
 .scrollable-row table {
     width:100%;
@@ -57,11 +54,8 @@ table tr {
     border-bottom: 1px solid white;
     color: #F86624;
 }
-.scrollable-row table td:first-child{
-    width:50%;
-}
-.scrollable-row table td:nth-child(2) td:nth-child(3){
-    width:25%;
+.scrollable-row table td{
+    width:19%;
 }
 .scrollable-row{
     width:100%; 
