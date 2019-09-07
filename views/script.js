@@ -13,6 +13,8 @@ const createGameForm = document.querySelector(".create-game-form");
 const tokenForm = document.querySelector(".token-form");
 const playCreate = document.querySelector("#playCreate");
 const playToken = document.querySelector("#playToken");
+const cancel1 = document.querySelector("#cancel1");
+const cancel2 = document.querySelector("#cancel2");
 
 let gameStarted = false;
 
@@ -100,6 +102,12 @@ liPlay.addEventListener("click", ()=>{
     chat.classList.add("hide");
     game.classList.remove("hide");
 });
+cancel1.addEventListener("click", ()=>{
+    location.reload();
+})
+cancel2.addEventListener("click", ()=>{
+    location.reload();
+})
 playCreate.addEventListener("click", startGame);
 playToken.addEventListener("click", startToken);
 create.addEventListener("click", createGame );

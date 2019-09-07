@@ -177,6 +177,10 @@ li:hover:not(.active) {
     width: 100%;
     height: 45px;
 }
+.cancel {
+    width: 100%;
+    height:45px;
+}
 .message-box{
     width:100%;
     height: 540px;
