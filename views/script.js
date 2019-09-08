@@ -8,8 +8,7 @@ const liPlay = document.querySelector('.nav ul li:nth-child(1)');
 const liChat = document.querySelector('.nav ul li:nth-child(2)');
 const sideNav = document.querySelector('.side-nav');
 const chat = document.querySelector('.chat');
-const create = document.querySelector('#createGame');
-const token = document.querySelector('#submitToken');
+
 const chooseType = document.querySelector('.choose-type');
 const createGameForm = document.querySelector('.create-game-form');
 const tokenForm = document.querySelector('.token-form');
@@ -25,42 +24,30 @@ const adjustDisplay = () => {
   const mq = window.matchMedia('(max-width: 1030px)');
   if (mq.matches) {
     // window width is at less than 1030px
-    side.classList.add('hide');
+    hideClass(side);
     if (gameStarted) {
-      sideNav.classList.add('hide');
-
-      nav.classList.remove('hide');
+      showClass(nave);
+      hideClass(sideNav);
     }
   } else {
-    // window width is greater than 1030px
-    side.classList.remove('hide');
+    // window width is greater than 1030p
+    showClass(side);
     if (gameStarted) {
-      nav.classList.add('hide');
-
-      gameBoard.classList.remove('hide');
-      game.classList.remove('hide');
-      sideNav.classList.remove('hide');
-      chat.classList.remove('hide');
+      hideClass(nav);
+      showClass(gameBoard, game, sideNav, chat);
     }
   }
 };
 
 const hideEverything = () => {
-  nav.classList.add('hide');
-  sideNav.classList.add('hide');
-  chat.classList.add('hide');
-  chooseType.classList.add('hide');
-  tokenForm.classList.add('hide');
-  createGameForm.classList.add('hide');
+  hideClass(nav, sideNav, chat, chooseType, tokenForm, createGameForm);
 };
 
 const startGame = () => {
   hideEverything();
-  // gameStarted = true;
   adjustDisplay();
 
-  // gameBoard.classList.remove("hide");
-  showToken.classList.remove('hide');
+  showClass(showToken);
 };
 
 const startToken = () => {
@@ -68,36 +55,22 @@ const startToken = () => {
   gameStarted = true;
   adjustDisplay();
 
-  gameBoard.classList.remove('hide');
+  showClass(gameBoard);
 };
-
-const createGame = () => {
-  hideEverything();
-  createGameForm.classList.remove('hide');
-};
-
-const submitToken = () => {
-  hideEverything();
-  tokenForm.classList.remove('hide');
-};
-
 
 liChat.addEventListener('click', () => {
-  liChat.classList.add('active');
-  liPlay.classList.remove('active');
+  addClass(liChat, 'active');
+  removeClass(liPlay, 'active');
 
-  gameBoard.classList.add('hide');
-  chat.classList.remove('hide');
-  side.classList.remove('hide');
-  game.classList.add('hide');
+  showClass(chat, side);
+  hideClass(gameBoard, game);
 });
 liPlay.addEventListener('click', () => {
-  liChat.classList.remove('active');
-  liPlay.classList.add('active');
+  addClass(liChat, 'active');
+  removeClass(liPlay, 'active');
 
-  gameBoard.classList.remove('hide');
-  chat.classList.add('hide');
-  game.classList.remove('hide');
+  showClass(gameBoard, game);
+  hideClass(chat);
 });
 cancel1.addEventListener('click', () => {
   location.reload();
@@ -108,6 +81,22 @@ cancel2.addEventListener('click', () => {
 
 playCreate.addEventListener('click', startGame);
 playToken.addEventListener('click', startToken);
+window.addEventListener('resize', adjustDisplay);
+
+// first screen: create game or submit Token 
+
+const create = document.querySelector('#createGame');
+const token = document.querySelector('#submitToken');
+
+const createGame = () => {
+  hideEverything();
+  showClass(createGameForm);
+};
+
+const submitToken = () => {
+  hideEverything();
+  showClass(tokenForm);
+};
+
 create.addEventListener('click', createGame);
 token.addEventListener('click', submitToken);
-window.addEventListener('resize', adjustDisplay);
