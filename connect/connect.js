@@ -14,8 +14,9 @@ let joinId;
 let peerInit; // simple-peer initiator
 let peerJoin; // simple-peer join
 
+let secretNum;
+
 const appendIandP = (userType, guess, i, p) => {
-  console.log('called: ', guess, i, p);
   const lastRow = tbody.rows[tbody.children.length - 1];
 
   if (userType === 'self' && lastRow.cells[0].textContent === '') {
@@ -106,26 +107,9 @@ const appendMessage = (userType, message) => {
   messageBox.innerHTML += html;
 };
 
-
-
-// for peer initaition
-// playInit.addEventListener('click', () => {
-  
-//   // generating id for initiation
-  
-//   // listening for message from other peer
-//   peerInit.on('data', (data) => {
-//     const { type, message } = JSON.parse(data);
-//     if (type === 'guess') {
-//       appendIandP('opponent', message, 0, 0);
-//     } else {
-//       appendMessage('opponent', message);
-//     }
-//   });
-// });
-
 // for peer joining
 playToken.addEventListener('click', () => {
+  secretNum = document.querySelector('#secretNumJoin').value;
   peerJoin = new SimplePeer({
     initiator: false, trickle: false, objectMode: true,
   });
@@ -149,11 +133,22 @@ playToken.addEventListener('click', () => {
   // listening for message from other peer
   peerJoin.on('data', (data) => {
     const { type, message } = JSON.parse(data);
-    console.log('type: ', type, 'message: ', message);
-    if (type === 'guess') {
-      appendIandP('opponent', message, 0, 0);
-    } else {
-      appendMessage('opponent', message);
+    if (secretNum !== '') {
+      if (type === 'guess') {
+        const iAndP = correct(secretNum, message);
+        iAndP.guess = message;
+        const messageJson = {
+          type: 'answer',
+          message: JSON.stringify(iAndP),
+        };
+        peerJoin.send(`${JSON.stringify(messageJson)}`);
+        appendIandP('opponent', iAndP.guess, iAndP.i, iAndP.p);
+      } else if (type === 'chat') {
+        appendMessage('opponent', message);
+      } else {
+        const value = JSON.parse(message);
+        appendIandP('self', value.guess, value.i, value.p);
+      }
     }
   });
 });
@@ -165,7 +160,6 @@ sendMessage.addEventListener('click', () => {
     message,
   };
   // if we are on the initiator side or otherwise
-  console.log('Before sending: ', `${JSON.stringify(messageJson)}`);
   if (selfIdInit) {
     peerInit.send(`${JSON.stringify(messageJson)}`);
     appendMessage('self', message);
@@ -183,8 +177,7 @@ sendGuess.addEventListener('click', () => {
   };
 
   if (isTurn()) {
-    appendIandP('self', guess, 0, 0);
-    console.log('Before sending: ', `${JSON.stringify(messageJson)}`);
+    // appendIandP('self', guess, 0, 0);
     if (selfIdInit) {
       peerInit.send(`${JSON.stringify(messageJson)}`);
     } else {
