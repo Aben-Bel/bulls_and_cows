@@ -62,7 +62,7 @@ playToken.addEventListener('click', () => {
     };
 
     // sending to server joining id and
-    // other id
+    // initiator's id
     socket.emit('send message', obj);
   });
   // listening for message from other peer
