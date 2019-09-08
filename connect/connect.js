@@ -1,5 +1,8 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-restricted-globals */
+// undefined variables are either defined in script.js
+// or variables provided by the browser
 const socket = io.connect();
-
 const playInit = document.querySelector('#playCreate');
 const tokenBox = document.querySelector('#tokenBox');
 const tokenValue = document.querySelector('#tokenValue');
@@ -9,6 +12,20 @@ let selfIdInit;
 let joinId;
 let peerInit; // simple-peer initiator
 let peerJoin; // simple-peer join
+
+const appendMessage = (userType, message) => {
+  const messageBox = document.querySelector('.message-box');
+  const color = userType === 'self' ? 'orange' : 'green';
+  const html = `                    
+    <div class="message">
+        <div>
+            <span class="user-initial" style="background:${color};"></span>
+            <span class="user-message">${message}</span>
+        </div>
+    </div>`;
+
+  messageBox.innerHTML += html;
+};
 
 // for peer initaition
 playInit.addEventListener('click', () => {
@@ -75,5 +92,10 @@ sendMessage.addEventListener('click', () => {
 socket.on('new message', (data) => {
   if (data.msg.their === selfIdInit) {
     peerInit.signal(JSON.parse(data.msg.mine));
+    hideEverything();
+    gameStarted = true;
+    adjustDisplay();
+    gameBoard.classList.remove('hide');
+    showToken.classList.add('hide');
   }
 });

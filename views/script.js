@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-undef */
 const gameBoard = document.querySelector('.game-board');
 const side = document.querySelector('.side');
 const game = document.querySelector('.game');
@@ -110,6 +112,29 @@ appendIandP('self', '1234', '1', '1');
 appendIandP('opponent', '1234', '1', '1');
 appendIandP('opponent', '1234', '1', '1');
 
+const adjustDisplay = () => {
+  const mq = window.matchMedia('(max-width: 1030px)');
+  if (mq.matches) {
+    // window width is at less than 1030px
+    side.classList.add('hide');
+    if (gameStarted) {
+      sideNav.classList.add('hide');
+
+      nav.classList.remove('hide');
+    }
+  } else {
+    // window width is greater than 1030px
+    side.classList.remove('hide');
+    if (gameStarted) {
+      nav.classList.add('hide');
+
+      gameBoard.classList.remove('hide');
+      game.classList.remove('hide');
+      sideNav.classList.remove('hide');
+      chat.classList.remove('hide');
+    }
+  }
+};
 
 const hideEverything = () => {
   nav.classList.add('hide');
@@ -147,30 +172,6 @@ const submitToken = () => {
   tokenForm.classList.remove('hide');
 };
 
-const adjustDisplay = () => {
-  const mq = window.matchMedia('(max-width: 1030px)');
-  if (mq.matches) {
-    // window width is at less than 1030px
-    side.classList.add('hide');
-    if (gameStarted) {
-      sideNav.classList.add('hide');
-
-      nav.classList.remove('hide');
-    }
-  } else {
-    // window width is greater than 1030px
-    side.classList.remove('hide');
-    if (gameStarted) {
-      nav.classList.add('hide');
-
-      gameBoard.classList.remove('hide');
-      game.classList.remove('hide');
-      sideNav.classList.remove('hide');
-      chat.classList.remove('hide');
-    }
-  }
-};
-
 
 liChat.addEventListener('click', () => {
   liChat.classList.add('active');
@@ -194,14 +195,6 @@ cancel1.addEventListener('click', () => {
 });
 cancel2.addEventListener('click', () => {
   location.reload();
-});
-document.querySelector('#continue').addEventListener('click', () => {
-  hideEverything();
-  gameStarted = true;
-  adjustDisplay();
-
-  gameBoard.classList.remove('hide');
-  showToken.classList.add('hide');
 });
 
 playCreate.addEventListener('click', startGame);
