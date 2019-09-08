@@ -28,7 +28,7 @@
 
                 <div class="card create-game-form hide ">
                     <label>Name: <input type="text" /></label> <br />
-                    <label>Secret Num: <input type="text" /></label> <br />
+                    <label>Secret Num: <input type="text" id="secretNumInit"/></label> <br />
                     <input type="submit" value="PLAY" id="playCreate" />
                     <input type="submit" value="CANCEL" id="cancel1" />
                 </div>
@@ -42,7 +42,7 @@
                 <div class="card token-form hide ">
                     <label>Token: <input type="text" id="tokenValue" /></label> <br />
                     <label>Name: <input type="text" /></label> <br />
-                    <label>Secret Num: <input type="text" /></label> <br />
+                    <label>Secret Num: <input type="text" id="secretNumJoin"/></label> <br />
                     <input type="submit" value="PLAY" id="playToken"/>
                     <input type="submit" value="CANCEL" id="cancel2" />
                 </div>
@@ -115,8 +115,9 @@
     </div>
 
     <script src="script/script.js"></script>
-    <script src="connect/connect.js"></script>
     <script src="game/gameLogic.js"></script>
+    <script src="connect/connect.js"></script>
+
 </body>
 
 </html>
