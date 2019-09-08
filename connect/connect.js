@@ -16,6 +16,7 @@ let peerInit; // simple-peer initiator
 let peerJoin; // simple-peer join
 
 const appendIandP = (userType, guess, i, p) => {
+  console.log('called: ', guess, i, p);
   const lastRow = tbody.rows[tbody.children.length - 1];
 
   if (userType === 'self' && lastRow.cells[0].textContent === '') {
@@ -98,9 +99,9 @@ const appendMessage = (userType, message) => {
   const html = `                    
     <div class="message">
         <div>
-            <span class="user-initial" style="background:${color};"></span>
-            <span class="user-message">${message}</span>
-        </div>
+            <span class="user-initial" style="background>${color};"></span>
+          <span class="user-message">${message}</span>
+        </di>
     </div>`;
 
   messageBox.innerHTML += html;
@@ -118,11 +119,13 @@ playInit.addEventListener('click', () => {
   });
   // listening for message from other peer
   peerInit.on('data', (data) => {
-    console.log('message in init: ', data);
-    if (/(^;[0-9]{4};)$/.test(data)) {
-      appendIandP('opponent', data.split(';')[1], 0, 0);
+    const { type, message } = JSON.parse(data);
+    console.log('message: ', data);
+    console.log('type: ', type, 'message: ', message);
+    if (type === 'guess') {
+      appendIandP('opponent', message, 0, 0);
     } else {
-      appendMessage('opponent', data);
+      appendMessage('opponent', message);
     }
   });
 });
@@ -151,37 +154,47 @@ playToken.addEventListener('click', () => {
   });
   // listening for message from other peer
   peerJoin.on('data', (data) => {
-    console.log('message in join: ', data);
-    if (/(^;[0-9]{4};)$/.test(data)) {
-      appendIandP('opponent', data.split(';')[1], 0, 0);
+    const { type, message } = JSON.parse(data);
+    console.log('type: ', type, 'message: ', message);
+    if (type === 'guess') {
+      appendIandP('opponent', message, 0, 0);
     } else {
-      appendMessage('opponent', data);
+      appendMessage('opponent', message);
     }
   });
 });
 
 sendMessage.addEventListener('click', () => {
   const message = document.querySelector('#message').value;
+  const messageJson = {
+    type: 'chat',
+    message,
+  };
   // if we are on the initiator side or otherwise
+  console.log('Before sending: ', `${JSON.stringify(messageJson)}`);
   if (selfIdInit) {
-    message.user = 'self';
-    peerInit.send(message);
+    peerInit.send(`${JSON.stringify(messageJson)}`);
     appendMessage('self', message);
   } else {
-    message.user = 'oppo';
-    peerJoin.send(message);
+    peerJoin.send(`${JSON.stringify(messageJson)}`);
     appendMessage('oppo', message);
   }
 });
 
 sendGuess.addEventListener('click', () => {
   const guess = document.querySelector('#submit-input-text').value;
+  const messageJson = {
+    type: 'guess',
+    message: guess,
+  };
+
   if (isTurn()) {
     appendIandP('self', guess, 0, 0);
+    console.log('Before sending: ', `${JSON.stringify(messageJson)}`);
     if (selfIdInit) {
-      peerInit.send(`;${guess};`);
+      peerInit.send(`${JSON.stringify(messageJson)}`);
     } else {
-      peerJoin.send(`;${guess};`);
+      peerJoin.send(`${JSON.stringify(messageJson)}`);
     }
   } else {
     console.log('invalid request, cannot send guess');
