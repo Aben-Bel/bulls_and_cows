@@ -1,11 +1,12 @@
 {
   "name": "bulls_and_cows",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Bulls and Cows (also known as Cows and Bulls or Pigs and Bulls) is an old code-breaking mind or paper and pencil game for two or more players. It is played by two opponents.",
+  "main": "app.js",
   "scripts": {
+    "start": "DEBUG=app nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -18,14 +19,29 @@
   },
   "homepage": "https://github.com/Aben-Bel/bulls_and_cows#readme",
   "dependencies": {
+    "chalk": "^2.4.2",
+    "debug": "^4.1.1",
     "express": "^4.17.1",
+    "mongoose": "^5.6.13",
+    "morgan": "^1.9.1",
     "simple-peer": "^9.5.0",
-    "socket-io": "^1.0.0",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "eslint": "^6.3.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2"
+    "eslint-plugin-import": "^2.18.2",
+    "nodemon": "^1.19.2"
+  },
+  "nodemonConfig": {
+    "restartable": "rs",
+    "ignore": [
+      "node_modules/**/node_modules"
+    ],
+    "delay": "2500",
+    "env": {
+      "NODE_ENV": "development",
+      "port": 4000
+    }
   }
 }
