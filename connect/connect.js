@@ -4,7 +4,6 @@
 // or variables provided by the browser
 const socket = io.connect();
 const playInit = document.querySelector('#playCreate');
-const tokenBox = document.querySelector('#tokenBox');
 const tokenValue = document.querySelector('#tokenValue');
 const sendMessage = document.querySelector('#sendMessage');
 const tbody = document.querySelector('#tbody');
@@ -107,28 +106,23 @@ const appendMessage = (userType, message) => {
   messageBox.innerHTML += html;
 };
 
+
+
 // for peer initaition
-playInit.addEventListener('click', () => {
-  peerInit = new SimplePeer({
-    initiator: true, trickle: false, objectMode: true,
-  });
-  // generating id for initiation
-  peerInit.on('signal', (data) => {
-    selfIdInit = JSON.stringify(data);
-    tokenBox.value = selfIdInit;
-  });
-  // listening for message from other peer
-  peerInit.on('data', (data) => {
-    const { type, message } = JSON.parse(data);
-    console.log('message: ', data);
-    console.log('type: ', type, 'message: ', message);
-    if (type === 'guess') {
-      appendIandP('opponent', message, 0, 0);
-    } else {
-      appendMessage('opponent', message);
-    }
-  });
-});
+// playInit.addEventListener('click', () => {
+  
+//   // generating id for initiation
+  
+//   // listening for message from other peer
+//   peerInit.on('data', (data) => {
+//     const { type, message } = JSON.parse(data);
+//     if (type === 'guess') {
+//       appendIandP('opponent', message, 0, 0);
+//     } else {
+//       appendMessage('opponent', message);
+//     }
+//   });
+// });
 
 // for peer joining
 playToken.addEventListener('click', () => {

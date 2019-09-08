@@ -12,11 +12,11 @@ const chat = document.querySelector('.chat');
 const chooseType = document.querySelector('.choose-type');
 const createGameForm = document.querySelector('.create-game-form');
 const tokenForm = document.querySelector('.token-form');
-const playCreate = document.querySelector('#playCreate');
+
 const playToken = document.querySelector('#playToken');
 const cancel1 = document.querySelector('#cancel1');
 const cancel2 = document.querySelector('#cancel2');
-const showToken = document.querySelector('.show-token');
+
 
 let gameStarted = false;
 
@@ -41,13 +41,6 @@ const adjustDisplay = () => {
 
 const hideEverything = () => {
   hideClass(nav, sideNav, chat, chooseType, tokenForm, createGameForm);
-};
-
-const startGame = () => {
-  hideEverything();
-  adjustDisplay();
-
-  showClass(showToken);
 };
 
 const startToken = () => {
@@ -79,9 +72,9 @@ cancel2.addEventListener('click', () => {
   location.reload();
 });
 
-playCreate.addEventListener('click', startGame);
 playToken.addEventListener('click', startToken);
 window.addEventListener('resize', adjustDisplay);
+// ============================================== //
 
 // first screen: create game or submit Token 
 
@@ -100,3 +93,45 @@ const submitToken = () => {
 
 create.addEventListener('click', createGame);
 token.addEventListener('click', submitToken);
+
+// second screen: regsiter player 1
+
+const playCreate = document.querySelector('#playCreate');
+const showToken = document.querySelector('.show-token');
+const play1Name = document.querySelector('#nickname1');
+const tokenBox = document.querySelector('#tokenBox');
+const tokenStatus = document.querySelector('#tokenStatus');
+
+const startGame = () => {
+  hideEverything();
+  adjustDisplay();
+
+  showClass(showToken);
+  // show loading icon
+
+  // step 1: initiate peer
+  peerInit = new SimplePeer({
+    initiator: true, trickle: false, objectMode: true,
+  });
+
+  // step 2: generate id
+  peerInit.on('signal', (webRTCid) => {
+    const name = play1Name.value || 'Player 1';
+    const data = JSON.stringify({ webRTCid, name });
+
+    // step 3: send id to server
+    socket.emit('join', data);
+  });
+
+  // step 4: get short token from server
+  socket.on('join', (token) => {
+    // TODO:: remove loading icon
+
+    // step 5: append short token to screen
+    tokenBox.value = token;
+    // step 6: show waiting for opponent to join message
+    tokenStatus.textContent = 'Waiting for opponent to join';
+  });
+};
+
+playCreate.addEventListener('click', startGame);

@@ -11,9 +11,12 @@ const server = require('http').createServer(app);
 const port = process.env.PORT || 3000;
 const io = require('socket.io').listen(server);
 
+const shortid = require('shortid');
+
 const connections = [];
 
 const db = mongoose.connect('mongodb://localhost/bullAndCow', { useNewUrlParser: true });
+const Player = require('./model/playerModel.js');
 
 app.use(morgan('tiny'));
 
@@ -45,5 +48,41 @@ io.sockets.on('connection', (socket) => {
 
   socket.on('send message', (data) => {
     io.sockets.emit('new message', { msg: data });
+  });
+
+  // register new player
+
+  socket.on('join', (msg) => {
+    console.log(msg);
+    const { name, webRTCid } = JSON.parse(msg);
+    debug(`${name} has joined us on id: ${webRTCid}`);
+    // step 1: generate short id
+    const token = shortid.generate();
+    // step 2: write to database short id, name and webRTCid
+    // Create an instance of model Player
+    const player_instance = new Player({ name, token, webRTCid });
+
+    // Save the new model instance, passing a callback
+    player_instance.save(function (err) {
+      if (err) return debug(err);
+      // saved!
+    });
+    // step 3: respond to user with short id
+    io.sockets.emit('join', token);
+  });
+
+  socket.on('token', (msg) => {
+    console.log(msg);
+    const { token } = JSON.parse(msg);
+
+    // fetch player1 webRTCid from db
+    const query = { token };
+    Player.find(query, (err, player1) => {
+      if (err) {
+        debug(err);
+      }
+      const resp = JSON.stringify(player1);
+      io.socket.emit('token', resp);
+    });
   });
 });
