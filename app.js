@@ -13,7 +13,7 @@ const io = require('socket.io').listen(server);
 
 const connections = [];
 
-const db = mongoose.connect('mongodb://localhost/bullAndCow');
+const db = mongoose.connect('mongodb://localhost/bullAndCow', { useNewUrlParser: true });
 
 app.use(morgan('tiny'));
 
@@ -25,6 +25,7 @@ app.use('/simple-peer', express.static(path.join(__dirname, '/node_modules')));
 app.use('/style', express.static(path.join(__dirname, '/views')));
 app.use('/script', express.static(path.join(__dirname, '/views')));
 app.use('/connect', express.static(path.join(__dirname, '/connect')));
+app.use('/game', express.static(path.join(__dirname, '/game_logic')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/views/index.html'));

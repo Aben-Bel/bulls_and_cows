@@ -1,0 +1,3 @@
+const correct = (yourSecretNum, theirGuess) => {
+    
+};
