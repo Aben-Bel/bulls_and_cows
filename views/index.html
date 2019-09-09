@@ -35,15 +35,15 @@
 
                 <div class="card show-token hide">
                     <label for="tokenBox">Your token: </label>
-                    <input type="text" id="tokenBox">
-                    <input type="submit" id="continue">
+                    <input type="text" id="tokenBox"/>
+                    <input type="submit" id="continue" value="copy" onclick="tokenBox.select();document.execCommand('copy');"/>
                     <p id="tokenStatus"></p>
                 </div>
 
                 <div class="card token-form hide ">
                     <label>Token: <input type="text" id="tokenValue" /></label> <br />
-                    <label>Name: <input type="text" /></label> <br />
-                    <label>Secret Num: <input type="text" id="secretNumJoin"/></label> <br />
+                    <label>Name: <input type="text"  id="nickname2"/></label> <br />
+                    <label>Secret Num: <input type="text" id="play1sec"/></label> <br />
                     <input type="submit" value="PLAY" id="playToken"/>
                     <input type="submit" value="CANCEL" id="cancel2" />
                 </div>

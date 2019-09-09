@@ -65,6 +65,7 @@ io.sockets.on('connection', (socket) => {
     // Save the new model instance, passing a callback
     player_instance.save((err) => {
       if (err) return debug(err);
+      return '';
       // saved!
     });
     // step 3: respond to user with short id

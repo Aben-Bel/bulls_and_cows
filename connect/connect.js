@@ -3,14 +3,11 @@
 // undefined variables are either defined in script.js
 // or variables provided by the browser
 const socket = io.connect();
-const playInit = document.querySelector('#playCreate');
-const tokenValue = document.querySelector('#tokenValue');
 const sendMessage = document.querySelector('#sendMessage');
 const tbody = document.querySelector('#tbody');
 const sendGuess = document.querySelector('#submit-guess');
 
 let selfIdInit;
-let joinId;
 let peerInit; // simple-peer initiator
 let peerJoin; // simple-peer join
 
@@ -106,52 +103,27 @@ const appendMessage = (userType, message) => {
 
   messageBox.innerHTML += html;
 };
-
-// for peer joining
-playToken.addEventListener('click', () => {
-  secretNum = document.querySelector('#secretNumJoin').value;
-  peerJoin = new SimplePeer({
-    initiator: false, trickle: false, objectMode: true,
-  });
-  joinId = tokenValue.value;
-  // using the id submitted to signal self
-  // to generate joining id
-  peerJoin.signal(joinId);
-
-  // getting the join id generated from
-  // initiator's id
-  peerJoin.on('signal', (data) => {
-    const obj = {
-      mine: JSON.stringify(data),
-      their: joinId,
-    };
-
-    // sending to server joining id and
-    // initiator's id
-    socket.emit('send message', obj);
-  });
-  // listening for message from other peer
-  peerJoin.on('data', (data) => {
-    const { type, message } = JSON.parse(data);
-    if (secretNum !== '') {
-      if (type === 'guess') {
-        const iAndP = correct(secretNum, message);
-        iAndP.guess = message;
-        const messageJson = {
-          type: 'answer',
-          message: JSON.stringify(iAndP),
-        };
-        peerJoin.send(`${JSON.stringify(messageJson)}`);
-        appendIandP('opponent', iAndP.guess, iAndP.i, iAndP.p);
-      } else if (type === 'chat') {
-        appendMessage('opponent', message);
-      } else {
-        const value = JSON.parse(message);
-        appendIandP('self', value.guess, value.i, value.p);
-      }
+const communicate = (peer, secretNum, data) => {
+  const { type, message } = JSON.parse(data);
+  if (secretNum !== '') {
+    if (type === 'guess') {
+      const iAndP = correct(secretNum, message);
+      iAndP.guess = message;
+      const messageJson = {
+        type: 'answer',
+        message: JSON.stringify(iAndP),
+      };
+      peer.send(`${JSON.stringify(messageJson)}`);
+      appendIandP('opponent', iAndP.guess, iAndP.i, iAndP.p);
+    } else if (type === 'chat') {
+      appendMessage('opponent', message);
+    } else {
+      const value = JSON.parse(message);
+      appendIandP('self', value.guess, value.i, value.p);
     }
-  });
-});
+  }
+};
+
 
 sendMessage.addEventListener('click', () => {
   const message = document.querySelector('#message').value;
