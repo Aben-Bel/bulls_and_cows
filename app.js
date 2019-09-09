@@ -88,8 +88,11 @@ io.sockets.on('connection', (socket) => {
     });
   });
 
-
+  // socket.on();
   socket.on('joinGame', (data) => {
     console.log('joinGame: ', data);
+    const { webRTCid, joinId } = JSON.parse(data);
+    console.log('id: ', joinId, 'webrtcid: ', webRTCid);
+    io.sockets.emit(joinId, webRTCid);
   });
 });
