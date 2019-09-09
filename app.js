@@ -60,10 +60,10 @@ io.sockets.on('connection', (socket) => {
     const token = shortid.generate();
     // step 2: write to database short id, name and webRTCid
     // Create an instance of model Player
-    const player_instance = new Player({ name, token, webRTCid });
+    const playerInstance = new Player({ name, token, webRTCid });
 
     // Save the new model instance, passing a callback
-    player_instance.save((err) => {
+    playerInstance.save((err) => {
       if (err) return debug(err);
       return '';
       // saved!
@@ -77,24 +77,17 @@ io.sockets.on('connection', (socket) => {
 
     // fetch player1 webRTCid from db
     const query = { token };
-    console.log(query);
     Player.findOne(query, (err, player1) => {
       if (err) {
         debug(err);
       }
-      console.log(':> ', player1);
       const resp = JSON.stringify(player1);
       io.sockets.emit('token', resp);
     });
   });
 
-  // socket.on();
   socket.on('joinGame', (data) => {
-    console.log('joinGame: ', data);
     const { webRTCid, joinId } = JSON.parse(data);
-    console.log('id: ', joinId, 'webrtcid: ', webRTCid);
-    socket.on(joinId,()=>{
-      io.sockets.emit(joinId, webRTCid);
-    });
+    io.sockets.emit(joinId, webRTCid);
   });
 });
