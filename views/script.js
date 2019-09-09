@@ -8,6 +8,7 @@ const liPlay = document.querySelector('.nav ul li:nth-child(1)');
 const liChat = document.querySelector('.nav ul li:nth-child(2)');
 const sideNav = document.querySelector('.side-nav');
 const chat = document.querySelector('.chat');
+const loading = document.querySelector('.loading');
 
 const chooseType = document.querySelector('.choose-type');
 const createGameForm = document.querySelector('.create-game-form');
@@ -39,7 +40,7 @@ const adjustDisplay = () => {
 };
 
 const hideEverything = () => {
-  hideClass(nav, sideNav, chat, chooseType, tokenForm, createGameForm);
+  hideClass(nav, sideNav, chat, chooseType, tokenForm, createGameForm, loading);
 };
 
 const startToken = () => {
@@ -108,7 +109,7 @@ const startGame = () => {
 
   showClass(showToken);
   // show loading icon
-
+  loadingIcon(true);
   // step 1: initiate peer
   peerInit = new SimplePeer({
     initiator: true, trickle: false, objectMode: true,
@@ -128,8 +129,8 @@ const startGame = () => {
 
   // step 4: get short token from server
   socket.on('join', (data) => {
-    // TODO:: remove loading icon
-
+    // remove loading icon
+    loadingIcon(false);
     // step 5: append short token to screen
     tokenId = data;
     tokenBox.value = data;
@@ -156,6 +157,7 @@ let joinId;
 
 // for peer joining
 const startGameJoin = () => {
+  loading(true);
   // step 1: initiate peer join
   peerJoin = new SimplePeer({
     initiator: false, trickle: false, objectMode: true,
