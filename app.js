@@ -63,7 +63,7 @@ io.sockets.on('connection', (socket) => {
     const player_instance = new Player({ name, token, webRTCid });
 
     // Save the new model instance, passing a callback
-    player_instance.save(function (err) {
+    player_instance.save((err) => {
       if (err) return debug(err);
       // saved!
     });

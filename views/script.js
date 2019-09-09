@@ -76,7 +76,7 @@ playToken.addEventListener('click', startToken);
 window.addEventListener('resize', adjustDisplay);
 // ============================================== //
 
-// first screen: create game or submit Token 
+// first screen: create game or submit Token
 
 const create = document.querySelector('#createGame');
 const token = document.querySelector('#submitToken');
@@ -113,13 +113,16 @@ const startGame = () => {
   peerInit = new SimplePeer({
     initiator: true, trickle: false, objectMode: true,
   });
+  console.log('About to generate key id: ', peerInit);
 
   // step 2: generate id
   peerInit.on('signal', (webRTCid) => {
+    console.log('generated id for init: ', webRTCid);
     const name = play1Name.value || 'Player 1';
     const data = JSON.stringify({ webRTCid, name });
 
     // step 3: send id to server
+    console.log('sending to server init: ', data);
     socket.emit('join', data);
   });
 
