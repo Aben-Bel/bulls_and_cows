@@ -73,17 +73,22 @@ io.sockets.on('connection', (socket) => {
   });
 
   socket.on('token', (msg) => {
-    console.log(msg);
-    const { token } = JSON.parse(msg);
+    console.log('msg: ', msg);
 
     // fetch player1 webRTCid from db
-    const query = { token };
+    const query = { msg };
     Player.find(query, (err, player1) => {
       if (err) {
         debug(err);
       }
+      console.log(':> ', player1);
       const resp = JSON.stringify(player1);
-      io.socket.emit('token', resp);
+      io.sockets.emit('token', resp);
     });
+  });
+
+
+  socket.on('joinGame', (data) => {
+    console.log('joinGame: ', data);
   });
 });

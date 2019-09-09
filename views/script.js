@@ -156,9 +156,6 @@ let joinId;
 
 // for peer joining
 const startGameJoin = () => {
-  hideEverything();
-  adjustDisplay();
-
   // step 1: initiate peer join
   peerJoin = new SimplePeer({
     initiator: false, trickle: false, objectMode: true,
@@ -170,6 +167,7 @@ const startGameJoin = () => {
 
   // step 3: get initiator id and use it to generate id
   socket.on('token', (initId) => {
+    console.log('id from server: ', initId);
     peerJoin.signal(JSON.parse(initId));
 
     // generate your id
@@ -178,7 +176,7 @@ const startGameJoin = () => {
       const data = JSON.stringify({ webRTCid, name, joinId });
 
       // step 4: send your id to server along with iniator id
-      socket.emit('message', data); // THIS LINE DOESN"T WORK
+      socket.emit('joinGame', data); // THIS LINE DOESN'T WORK
       gameStarted = true;
       adjustDisplay();
     });
