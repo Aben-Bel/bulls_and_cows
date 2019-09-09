@@ -72,12 +72,13 @@ io.sockets.on('connection', (socket) => {
     io.sockets.emit('join', token);
   });
 
-  socket.on('token', (msg) => {
-    console.log('msg: ', msg);
+  socket.on('token', (token) => {
+    console.log('msg: ', token);
 
     // fetch player1 webRTCid from db
-    const query = { msg };
-    Player.find(query, (err, player1) => {
+    const query = { token };
+    console.log(query);
+    Player.findOne(query, (err, player1) => {
       if (err) {
         debug(err);
       }

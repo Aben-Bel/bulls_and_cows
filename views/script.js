@@ -26,7 +26,7 @@ const adjustDisplay = () => {
     // window width is at less than 1030px
     hideClass(side);
     if (gameStarted) {
-      showClass(nave);
+      showClass(nav);
       hideClass(sideNav);
     }
   } else {
@@ -157,7 +157,7 @@ let joinId;
 
 // for peer joining
 const startGameJoin = () => {
-  loading(true);
+  loadingIcon(true);
   // step 1: initiate peer join
   peerJoin = new SimplePeer({
     initiator: false, trickle: false, objectMode: true,
@@ -168,9 +168,9 @@ const startGameJoin = () => {
   socket.emit('token', joinId);
 
   // step 3: get initiator id and use it to generate id
-  socket.on('token', (initId) => {
-    console.log('id from server: ', initId);
-    peerJoin.signal(JSON.parse(initId));
+  socket.on('token', (player1string) => {
+    const player1 = JSON.parse(player1string);
+    peerJoin.signal(player1.webRTCid);
 
     // generate your id
     peerJoin.on('signal', (webRTCid) => {
@@ -178,7 +178,7 @@ const startGameJoin = () => {
       const data = JSON.stringify({ webRTCid, name, joinId });
 
       // step 4: send your id to server along with iniator id
-      socket.emit('joinGame', data); // THIS LINE DOESN'T WORK
+      socket.emit('joinGame', data);
       gameStarted = true;
       adjustDisplay();
     });
