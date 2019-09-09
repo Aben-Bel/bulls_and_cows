@@ -138,7 +138,6 @@ const startGame = () => {
     tokenStatus.textContent = 'Waiting for opponent to join';
   });
   // listen with your token short id for WebRTC id answer
-  socket.emit(tokenId, '');
   socket.on(tokenId, (data) => {
     // respond to establish peer connection
     console.log('got id from join: ', data);
@@ -182,12 +181,16 @@ const startGameJoin = () => {
 
       // step 4: send your id to server along with iniator id
       socket.emit('joinGame', data);
+      socket.on(joinId, (data) => {
+        console.log("hellooo");
+      });
       // show appropraite screen
       hideEverything();
       adjustDisplay();
       showClass(gameBoard, sideNav, chat);
     });
   });
+
 
   // listening for message from other peer
   peerJoin.on('data', (data) => {

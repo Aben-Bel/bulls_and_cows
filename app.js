@@ -93,6 +93,8 @@ io.sockets.on('connection', (socket) => {
     console.log('joinGame: ', data);
     const { webRTCid, joinId } = JSON.parse(data);
     console.log('id: ', joinId, 'webrtcid: ', webRTCid);
-    io.sockets.emit(joinId, webRTCid);
+    socket.on(joinId,()=>{
+      io.sockets.emit(joinId, webRTCid);
+    });
   });
 });
