@@ -114,16 +114,13 @@ const startGame = () => {
   peerInit = new SimplePeer({
     initiator: true, trickle: false, objectMode: true,
   });
-  console.log('About to generate key id: ', peerInit);
 
   // step 2: generate id
   peerInit.on('signal', (webRTCid) => {
-    console.log('generated id for init: ', webRTCid);
     const name = play1Name.value || 'Player 1';
     const data = JSON.stringify({ webRTCid, name });
 
     // step 3: send id to server
-    console.log('sending to server init: ', data);
     socket.emit('join', data);
   });
 
@@ -136,16 +133,16 @@ const startGame = () => {
     tokenBox.value = data;
     // step 6: show waiting for opponent to join message
     tokenStatus.textContent = 'Waiting for opponent to join';
-  });
-  // listen with your token short id for WebRTC id answer
-  socket.emit(tokenId, '');
-  socket.on(tokenId, (data) => {
-    // respond to establish peer connection
-    console.log('got id from join: ', data);
-    peerInit.signal(data);
-    console.log('connection established');
-    gameStarted = true;
-    adjustDisplay();
+    // start listening on the tokenId
+    // listen with your token short id for WebRTC id answer
+    socket.on(tokenId, (player2) => {
+      // respond to establish peer connection
+      console.log('got id from join: ', player2);
+      peerInit.signal(player2);
+      console.log('connection established');
+      gameStarted = true;
+      adjustDisplay();
+    });
   });
 };
 
@@ -169,7 +166,10 @@ const startGameJoin = () => {
   // step 2: request for id using token
   joinId = tokenValue.value;
   socket.emit('token', joinId);
-
+  socket.on(joinId, (data) => {
+    console.log('server is emitting on ', joinId);
+    console.log(data);
+  });
   // step 3: get initiator id and use it to generate id
   socket.on('token', (player1string) => {
     const player1 = JSON.parse(player1string);
