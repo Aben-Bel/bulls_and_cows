@@ -67,7 +67,9 @@ io.sockets.on('connection', (socket) => {
       // saved!
     });
     // step 3: respond to user with short id
-    io.sockets.emit('join', token);
+    socket.emit('join', token);
+
+    debug(`${name} has joined -- token ${token}`);
   });
 
   socket.on('token', (token) => {
