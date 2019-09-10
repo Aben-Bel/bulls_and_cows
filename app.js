@@ -53,13 +53,10 @@ io.sockets.on('connection', (socket) => {
   // register new player
 
   socket.on('join', (msg) => {
-    console.log(msg);
     const { name, webRTCid } = JSON.parse(msg);
-    debug(`${name} has joined us on id: ${webRTCid}`);
     // step 1: generate short id
     const token = shortid.generate();
     // step 2: write to database short id, name and webRTCid
-    // Create an instance of model Player
     const playerInstance = new Player({ name, token, webRTCid });
 
     // Save the new model instance, passing a callback
@@ -73,7 +70,6 @@ io.sockets.on('connection', (socket) => {
   });
 
   socket.on('token', (token) => {
-    console.log('msg: ', token);
 
     // fetch player1 webRTCid from db
     const query = { token };
@@ -82,6 +78,7 @@ io.sockets.on('connection', (socket) => {
         debug(err);
       }
       const resp = JSON.stringify(player1);
+      debug(resp);
       io.sockets.emit('token', resp);
     });
   });

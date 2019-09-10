@@ -2,16 +2,11 @@
 /* eslint-disable no-restricted-globals */
 // undefined variables are either defined in script.js
 // or variables provided by the browser
-const socket = io.connect();
 const sendMessage = document.querySelector('#sendMessage');
 const tbody = document.querySelector('#tbody');
 const sendGuess = document.querySelector('#submit-guess');
 
 let selfIdInit;
-let peerInit; // simple-peer initiator
-let peerJoin; // simple-peer join
-
-let secretNum;
 
 const appendIandP = (userType, guess, i, p) => {
   const lastRow = tbody.rows[tbody.children.length - 1];
@@ -131,14 +126,9 @@ sendMessage.addEventListener('click', () => {
     type: 'chat',
     message,
   };
-  // if we are on the initiator side or otherwise
-  if (selfIdInit) {
-    peerInit.send(`${JSON.stringify(messageJson)}`);
-    appendMessage('self', message);
-  } else {
-    peerJoin.send(`${JSON.stringify(messageJson)}`);
-    appendMessage('oppo', message);
-  }
+  const sender = selfIdInit ? 'self' : 'oppo';
+  peer.send(`${JSON.stringify(messageJson)}`);
+  appendMessage(sender, message);
 });
 
 sendGuess.addEventListener('click', () => {
@@ -149,29 +139,8 @@ sendGuess.addEventListener('click', () => {
   };
 
   if (isTurn()) {
-    // appendIandP('self', guess, 0, 0);
-    if (selfIdInit) {
-      peerInit.send(`${JSON.stringify(messageJson)}`);
-    } else {
-      peerJoin.send(`${JSON.stringify(messageJson)}`);
-    }
+    peer.send(`${JSON.stringify(messageJson)}`);
   } else {
-    console.log('invalid request, cannot send guess');
-  }
-});
-
-
-// when join id sends its id to server,
-// the server sends the message to everyone.
-// we recieve on client side and check, if
-// it has our initiator id, then connect.
-socket.on('new message', (data) => {
-  if (data.msg.their === selfIdInit) {
-    peerInit.signal(JSON.parse(data.msg.mine));
-    hideEverything();
-    gameStarted = true;
-    adjustDisplay();
-    gameBoard.classList.remove('hide');
-    showToken.classList.add('hide');
+    Console.log('invalid request, cannot send guess');
   }
 });
