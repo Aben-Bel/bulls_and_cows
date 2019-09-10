@@ -17,6 +17,7 @@ const tokenForm = document.querySelector('.token-form');
 const cancel1 = document.querySelector('#cancel1');
 const cancel2 = document.querySelector('#cancel2');
 
+const socket = io.connect();
 
 let gameStarted = false;
 
@@ -43,14 +44,6 @@ const hideEverything = () => {
   hideClass(nav, sideNav, chat, chooseType, tokenForm, createGameForm, loading);
 };
 
-const startToken = () => {
-  hideEverything();
-  gameStarted = true;
-  adjustDisplay();
-
-  showClass(gameBoard);
-};
-
 liChat.addEventListener('click', () => {
   addClass(liChat, 'active');
   removeClass(liPlay, 'active');
@@ -72,7 +65,6 @@ cancel2.addEventListener('click', () => {
   location.reload();
 });
 
-// playToken.addEventListener('click', startToken);
 window.addEventListener('resize', adjustDisplay);
 // ============================================== //
 
@@ -102,101 +94,86 @@ const play1Name = document.querySelector('#nickname1');
 const tokenBox = document.querySelector('#tokenBox');
 const tokenStatus = document.querySelector('#tokenStatus');
 
-const startGame = () => {
-  hideEverything();
-  adjustDisplay();
-  let tokenId;
-
-  showClass(showToken);
-  // show loading icon
-  loadingIcon(true);
-  // step 1: initiate peer
-  peerInit = new SimplePeer({
-    initiator: true, trickle: false, objectMode: true,
-  });
-
-  // step 2: generate id
-  peerInit.on('signal', (webRTCid) => {
-    const name = play1Name.value || 'Player 1';
-    const data = JSON.stringify({ webRTCid, name });
-
-    // step 3: send id to server
-    socket.emit('join', data);
-  });
-
-  // step 4: get short token from server
-  socket.on('join', (data) => {
-    // remove loading icon
-    loadingIcon(false);
-    // step 5: append short token to screen
-    tokenId = data;
-    tokenBox.value = data;
-    // step 6: show waiting for opponent to join message
-    tokenStatus.textContent = 'Waiting for opponent to join';
-    // start listening on the tokenId
-    // listen with your token short id for WebRTC id answer
-    socket.on(tokenId, (player2) => {
-      // respond to establish peer connection
-      console.log('got id from join: ', player2);
-      peerInit.signal(player2);
-      console.log('connection established');
-      gameStarted = true;
-      adjustDisplay();
-    });
-  });
-};
-
-playCreate.addEventListener('click', startGame);
-
-
 // second screen: register player 2
+
 const play2Name = document.querySelector('#nickname2');
 const playToken = document.querySelector('#playToken');
 const tokenValue = document.querySelector('#tokenValue');
-let joinId;
 
-// for peer joining
-const startGameJoin = () => {
-  loadingIcon(true);
-  // step 1: initiate peer join
-  peerJoin = new SimplePeer({
-    initiator: false, trickle: false, objectMode: true,
+let peer;
+
+const generateWebRTCid = (initiator, tokenId) => {
+  peer.on('signal', (webRTCid) => {
+    const name = initiator ? play1Name.value || 'Player 1' : play2Name.value || 'Player 2';
+    const data = JSON.stringify({ webRTCid, name, tokenId });
+
+    const sendTo = initiator ? 'join' : 'joinGame';
+    // send id to server
+    socket.emit(sendTo, data);
   });
+};
 
-  // step 2: request for id using token
-  joinId = tokenValue.value;
-  socket.emit('token', joinId);
-  socket.on(joinId, (data) => {
-    console.log('server is emitting on ', joinId);
-    console.log(data);
-  });
-  // step 3: get initiator id and use it to generate id
-  socket.on('token', (player1string) => {
-    const player1 = JSON.parse(player1string);
-    peerJoin.signal(player1.webRTCid);
-
-    // generate your id
-    peerJoin.on('signal', (webRTCid) => {
-      const name = play2Name.value || 'Player 2';
-      const data = JSON.stringify({ webRTCid, name, joinId });
-
-      // step 4: send your id to server along with iniator id
-      socket.emit('joinGame', data);
-      socket.on(joinId, (data) => {
-        console.log("hellooo");
-      });
-      // show appropraite screen
-      hideEverything();
-      adjustDisplay();
-      showClass(gameBoard, sideNav, chat);
-    });
-  });
-
-
+const listenTop2pMessage = () => {
   // listening for message from other peer
-  peerJoin.on('data', (data) => {
+  peer.on('data', (data) => {
     communicate(peerJoin, secretNum, data);
   });
 };
 
-playToken.addEventListener('click', startGameJoin);
+const onSubmitCommunication = (initiator) => {
+  // track player's initiate status
+  selfIdInit = initiator;
+
+  // show loading icon
+  loadingIcon(true);
+
+  // step 1: create peer
+  peer = new SimplePeer({
+    initiator, trickle: false, objectMode: true,
+  });
+
+  if (initiator) {
+    generateWebRTCid(initiator);
+    hideEverything();
+    adjustDisplay();
+    showClass(showToken);
+  } else {
+    const tokenId = tokenValue.value;
+    socket.emit('token', tokenId);
+  }
+
+  // start listening to WebRTC p2p messages
+  listenTop2pMessage();
+};
+
+playCreate.addEventListener('click', () => onSubmitCommunication(true));
+playToken.addEventListener('click', () => onSubmitCommunication(false));
+
+// listen to messages from socket.io
+
+socket.on('join', (tokenId) => {
+  // remove loading icon
+  loadingIcon(false);
+  // append short token to screen
+  tokenBox.value = tokenId;
+
+  tokenStatus.textContent = 'Waiting for opponent to join';
+
+  // listen with your token short id for WebRTC id answer
+  socket.on(tokenId, (player2) => {
+    // respond to establish peer connection
+    peer.signal(player2);
+    gameStarted = true;
+    adjustDisplay();
+  });
+});
+
+socket.on('token', (player1string) => {
+  console.log(player1string);
+  const player1 = JSON.parse(player1string);
+  peer.signal(player1.webRTCid);
+  generateWebRTCid(false);
+  hideEverything();
+  adjustDisplay();
+  showClass(gameBoard, sideNav, chat);
+});
