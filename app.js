@@ -1,12 +1,13 @@
 const express = require('express');
+const dotenv = require('dotenv').config();
 const chalk = require('chalk');
 const debug = require('debug')('app');
 const morgan = require('morgan');
 const path = require('path');
 const mongoose = require('mongoose');
+const server = require('http').createServer(app);
 
 const app = express();
-const server = require('http').createServer(app);
 
 const port = process.env.PORT || 3000;
 const io = require('socket.io').listen(server);
