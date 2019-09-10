@@ -17,6 +17,8 @@ const showToken = document.querySelector('.show-token');
 
 const cancel1 = document.querySelector('#cancel1');
 const cancel2 = document.querySelector('#cancel2');
+const secretNum1 = document.querySelector('#play1sec');
+const secretNum2 = document.querySelector('#play2sec');
 
 const gameEnd = document.querySelector('.gameEnd');
 const gameEndMessage = document.querySelector('#gameEndMessage');
@@ -201,66 +203,72 @@ const communicate = (peer, secretNum, data) => {
 const listenTop2pMessage = () => {
   // listening for message from other peer
   peer.on('data', (data) => {
-    secretNum1 = document.querySelector('#play1sec').value;
-    secretNum2 = document.querySelector('#play2sec').value;
-    secretNum = secretNum1 || secretNum2;
+    const secretNum = secretNum1.value || secretNum2.value;
     communicate(peer, secretNum, data);
   });
 };
+const validSecretNum = () => {
+  const secretNum = secretNum1.value || secretNum2.value || '';
+  const condition1 = secretNum.split('').every((val, index) => !(secretNum.slice(0, index) + secretNum.slice(index + 1)).includes(val));
+  const condition2 = (/^([0-9]{4})$/g).test(secretNum);
 
+  return condition1 && condition2;
+};
 const onSubmitCommunication = (initiator) => {
-  // track player's initiate status
+  if (validSecretNum()) {
+    // track player's initiate status
   // selfIdInit = initiator;
   // show loading icon
-  loadingIcon(true);
+    loadingIcon(true);
 
-  // step 1: create peer
-  peer = new SimplePeer({
-    initiator, trickle: false, objectMode: true,
-  });
-
-  if (initiator) {
-    generateWebRTCid(initiator);
-    hideEverything();
-    adjustDisplay();
-    showClass(showToken);
-  } else {
-    const tokenId = tokenValue.value;
-    socket.emit('token', tokenId);
-  }
-
-  // start listening to WebRTC p2p messages
-  listenTop2pMessage();
-
-  if (!initiator) {
-    socket.on('token', (player1string) => {
-      const player1 = JSON.parse(player1string);
-      peer.signal(player1.webRTCid);
-      generateWebRTCid(false, player1.token);
-      hideEverything();
-      showClass(gameBoard, nav, chat);
-      gameStarted = true;
-      adjustDisplay();
+    // step 1: create peer
+    peer = new SimplePeer({
+      initiator, trickle: false, objectMode: true,
     });
-  } else {
-    socket.on('join', (tokenId) => {
-      // remove loading icon
-      loadingIcon(false);
-      // append short token to screen
-      tokenBox.value = tokenId;
 
-      tokenStatus.textContent = 'Waiting for opponent to join';
+    if (initiator) {
+      generateWebRTCid(initiator);
+      hideEverything();
+      adjustDisplay();
+      showClass(showToken);
+    } else {
+      const tokenId = tokenValue.value;
+      socket.emit('token', tokenId);
+    }
 
-      // listen with your token short id for WebRTC id answer
-      socket.on(tokenId, (player2) => {
-        // respond to establish peer connection
-        peer.signal(player2);
+    // start listening to WebRTC p2p messages
+    listenTop2pMessage();
+
+    if (!initiator) {
+      socket.on('token', (player1string) => {
+        const player1 = JSON.parse(player1string);
+        peer.signal(player1.webRTCid);
+        generateWebRTCid(false, player1.token);
         hideEverything();
-        showClass(gameBoard, game, nav, chat);
+        showClass(gameBoard, nav, chat);
         gameStarted = true;
         adjustDisplay();
       });
-    });
+    } else {
+      socket.on('join', (tokenId) => {
+      // remove loading icon
+        loadingIcon(false);
+        // append short token to screen
+        tokenBox.value = tokenId;
+
+        tokenStatus.textContent = 'Waiting for opponent to join';
+
+        // listen with your token short id for WebRTC id answer
+        socket.on(tokenId, (player2) => {
+        // respond to establish peer connection
+          peer.signal(player2);
+          hideEverything();
+          showClass(gameBoard, game, nav, chat);
+          gameStarted = true;
+          adjustDisplay();
+        });
+      });
+    }
   }
 };
 
