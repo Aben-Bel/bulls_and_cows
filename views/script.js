@@ -18,6 +18,10 @@ const showToken = document.querySelector('.show-token');
 const cancel1 = document.querySelector('#cancel1');
 const cancel2 = document.querySelector('#cancel2');
 
+const gameEnd = document.querySelector('.gameEnd');
+const gameEndMessage = document.querySelector('#gameEndMessage');
+const submitInput = document.querySelector('.submit-input');
+
 const socket = io.connect();
 
 let gameStarted = false;
@@ -27,16 +31,16 @@ const adjustDisplay = () => {
   if (mq.matches) {
     // window width is at less than 1030px
     hideClass(side);
+    showClass(nav);
     if (gameStarted) {
-      showClass(nav);
       hideClass(sideNav);
     }
   } else {
     // window width is greater than 1030p
     showClass(side);
+    hideClass(nav);
     if (gameStarted) {
-      hideClass(nav);
-      showClass(gameBoard, game, sideNav, chat);
+      showClass(gameBoard, sideNav, chat);
     }
   }
 };
@@ -49,15 +53,16 @@ liChat.addEventListener('click', () => {
   addClass(liChat, 'active');
   removeClass(liPlay, 'active');
 
+  hideClass(game);
+  adjustDisplay();
   showClass(chat, side);
-  hideClass(gameBoard, game);
 });
 liPlay.addEventListener('click', () => {
-  addClass(liChat, 'active');
-  removeClass(liPlay, 'active');
+  addClass(liPlay, 'active');
+  removeClass(liChat, 'active');
 
   showClass(gameBoard, game);
-  hideClass(chat);
+  adjustDisplay();
 });
 cancel1.addEventListener('click', () => {
   location.reload();
@@ -106,24 +111,106 @@ const generateWebRTCid = (initiator, tokenId) => {
   peer.on('signal', (webRTCid) => {
     const name = initiator ? play1Name.value || 'Player 1' : play2Name.value || 'Player 2';
     const data = JSON.stringify({ webRTCid, name, tokenId });
-
     const sendTo = initiator ? 'join' : 'joinGame';
     // send id to server
     socket.emit(sendTo, data);
   });
 };
 
+
+const tbody = document.querySelector('#tbody');
+
+const appendIandP = (userType, guess, i, p) => {
+  const lastRow = tbody.rows[tbody.children.length - 1];
+  const entry = [guess, i, p, '', '', ''];
+
+  if (userType === 'self' && lastRow.cells[0].textContent === '') {
+    lastRow.cells[0].textContent = guess;
+    lastRow.cells[1].textContent = i;
+    lastRow.cells[2].textContent = p;
+  } else if (userType === 'opponent' && lastRow.cells[3].textContent === '') {
+    lastRow.cells[3].textContent = guess;
+    lastRow.cells[4].textContent = i;
+    lastRow.cells[5].textContent = p;
+  } else if (userType === 'self' && lastRow.cells[3].textContent !== '' && lastRow.cells[0].textContent !== '') {
+    const tr = document.createElement('TR');
+    for (let j = 0; j < 6; j += 1) {
+      const td = document.createElement('TD');
+      td.textContent = entry[j];
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  } else if (userType === 'opponent' && lastRow.cells[3].textContent !== '' && lastRow.cells[0].textContent !== '') {
+    const tr = document.createElement('TR');
+    for (let j = 5; j >= 6; j -= 1) {
+      const td = document.createElement('TD');
+      td.textContent = entry[j];
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  } else {
+    console.log('Illegal append request by ', userType);
+  }
+};
+
+const appendMessage = (userType, message) => {
+  const messageBox = document.querySelector('.message-box');
+  const color = userType === 'self' ? 'orange' : 'green';
+  const html = `                    
+    <div class="message">
+        <div>
+            <span class="user-initial" style="background:${color};"></span>
+          <span class="user-message">${message}</span>
+        </di>
+    </div>`;
+
+  messageBox.innerHTML += html;
+};
+
+const communicate = (peer, secretNum, data) => {
+  const { type, message } = JSON.parse(data);
+
+  if (secretNum !== '') {
+    if (type === 'guess') {
+      const iAndP = correct(secretNum, message);
+      iAndP.guess = message;
+      const messageJson = {
+        type: 'answer',
+        message: JSON.stringify(iAndP),
+      };
+      peer.send(`${JSON.stringify(messageJson)}`);
+      appendIandP('opponent', iAndP.guess, iAndP.i, iAndP.p);
+    } else if (type === 'chat') {
+      appendMessage('opponent', message);
+    } else {
+      const value = JSON.parse(message);
+      appendIandP('self', value.guess, value.i, value.p);
+
+      if (value.i + value.p === 8) {
+        gameStarted = false;
+        hideEverything();
+        showClass(gameEnd, chat, nav);
+        adjustDisplay();
+        hideClass(submitInput);
+        gameEndMessage.textContent = 'YOU WON';
+      }
+    }
+  }
+};
+
 const listenTop2pMessage = () => {
   // listening for message from other peer
   peer.on('data', (data) => {
-    communicate(peerJoin, secretNum, data);
+    secretNum1 = document.querySelector('#play1sec').value;
+    secretNum2 = document.querySelector('#play2sec').value;
+    secretNum = secretNum1 || secretNum2;
+    communicate(peer, secretNum, data);
   });
 };
 
 const onSubmitCommunication = (initiator) => {
   // track player's initiate status
-  selfIdInit = initiator;
-
+  // selfIdInit = initiator;
   // show loading icon
   loadingIcon(true);
 
@@ -144,36 +231,80 @@ const onSubmitCommunication = (initiator) => {
 
   // start listening to WebRTC p2p messages
   listenTop2pMessage();
+
+  if (!initiator) {
+    socket.on('token', (player1string) => {
+      const player1 = JSON.parse(player1string);
+      peer.signal(player1.webRTCid);
+      generateWebRTCid(false, player1.token);
+      hideEverything();
+      showClass(gameBoard, nav, chat);
+      gameStarted = true;
+      adjustDisplay();
+    });
+  } else {
+    socket.on('join', (tokenId) => {
+      // remove loading icon
+      loadingIcon(false);
+      // append short token to screen
+      tokenBox.value = tokenId;
+
+      tokenStatus.textContent = 'Waiting for opponent to join';
+
+      // listen with your token short id for WebRTC id answer
+      socket.on(tokenId, (player2) => {
+        // respond to establish peer connection
+        peer.signal(player2);
+        hideEverything();
+        showClass(gameBoard, game, nav, chat);
+        gameStarted = true;
+        adjustDisplay();
+      });
+    });
+  }
 };
 
 playCreate.addEventListener('click', () => onSubmitCommunication(true));
 playToken.addEventListener('click', () => onSubmitCommunication(false));
 
-// listen to messages from socket.io
 
-socket.on('join', (tokenId) => {
-  // remove loading icon
-  loadingIcon(false);
-  // append short token to screen
-  tokenBox.value = tokenId;
+// sending message appending them to the dom
 
-  tokenStatus.textContent = 'Waiting for opponent to join';
+const sendMessage = document.querySelector('#sendMessage');
+const sendGuess = document.querySelector('#submit-guess');
 
-  // listen with your token short id for WebRTC id answer
-  socket.on(tokenId, (player2) => {
-    // respond to establish peer connection
-    peer.signal(player2);
-    gameStarted = true;
-    adjustDisplay();
-  });
-});
+let selfIdInit;
 
-socket.on('token', (player1string) => {
-  console.log(player1string);
-  const player1 = JSON.parse(player1string);
-  peer.signal(player1.webRTCid);
-  generateWebRTCid(false);
-  hideEverything();
-  adjustDisplay();
-  showClass(gameBoard, sideNav, chat);
-});
+const isTurn = () => {
+  const lastRow = tbody.rows[tbody.children.length - 1];
+  return (lastRow.cells[3].textContent === '' && lastRow.cells[0].textContent === '') || lastRow.cells[3].textContent !== '';
+};
+
+const message = (peer) => {
+  const textMessage = document.querySelector('#message').value;
+  const messageJson = {
+    type: 'chat',
+    message: textMessage,
+  };
+  // const sender = selfIdInit ? 'self' : 'oppo';
+  peer.send(`${JSON.stringify(messageJson)}`);
+  appendMessage('self', textMessage);
+};
+
+sendMessage.addEventListener('click', () => message(peer));
+
+const guess = (peer) => {
+  const textGuess = document.querySelector('#submit-input-text').value;
+  const messageJson = {
+    type: 'guess',
+    message: textGuess,
+  };
+
+  if (isTurn()) {
+    peer.send(`${JSON.stringify(messageJson)}`);
+  } else {
+    console.log('invalid request, cannot send guess');
+  }
+};
+
+sendGuess.addEventListener('click', () => guess(peer));

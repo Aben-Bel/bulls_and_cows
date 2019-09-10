@@ -70,21 +70,24 @@ io.sockets.on('connection', (socket) => {
   });
 
   socket.on('token', (token) => {
-
     // fetch player1 webRTCid from db
     const query = { token };
     Player.findOne(query, (err, player1) => {
       if (err) {
         debug(err);
       }
-      const resp = JSON.stringify(player1);
+      const data = player1;
+      data.token = token;
+      const resp = JSON.stringify(data);
       debug(resp);
       io.sockets.emit('token', resp);
     });
   });
 
   socket.on('joinGame', (data) => {
-    const { webRTCid, joinId } = JSON.parse(data);
-    io.sockets.emit(joinId, webRTCid);
+    const { webRTCid, tokenId } = JSON.parse(data);
+    console.log('offer accept id: ', webRTCid);
+    console.log('broadcasting at: ', tokenId);
+    io.sockets.emit(tokenId, webRTCid);
   });
 });

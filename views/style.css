@@ -23,8 +23,8 @@ body{
     bottom: 0;
     right: 0;
     font-size: 50px;
-  }
-  .loading:after {
+}
+.loading:after {
     content: '';
     display: block;
     position: fixed;
@@ -33,8 +33,10 @@ body{
     width: 100%;
     height: 100%;
     background-color: rgba(0,0,0,0.3);
-
-  }
+}
+#gameEndMessage {
+    margin:auto;
+}
 .board{
     height: 640px;
     position: absolute;

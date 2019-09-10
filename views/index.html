@@ -26,11 +26,18 @@
                     <input type="submit" value="USE GAME TOKEN" id="submitToken"/>
                 </div>
 
+
+                <div class="card hide gameEnd">
+                    <p><span id="gameEndMessage"></span></p>
+                </div>
+
                 <div class="card create-game-form hide ">
-                    <label>Name: <input type="text" id="nickname1"/></label> <br />
-                    <label>Secret Num: <input type="text" id="play1sec"/></label> <br />
-                    <input type="submit" value="PLAY" id="playCreate" />
-                    <input type="submit" value="CANCEL" id="cancel1" />
+                    <form>
+                        <label>Name: <input type="text" id="nickname1"/></label> <br />
+                        <label>Secret Num: <input type="text" id="play1sec" pattern="[{4}"/></label> <br />
+                        <input type="submit" value="PLAY" id="playCreate" />
+                        <input type="submit" value="CANCEL" id="cancel1" />
+                    </form>
                 </div>
 
                 <div class="card show-token hide">
@@ -43,7 +50,7 @@
                 <div class="card token-form hide ">
                     <label>Token: <input type="text" id="tokenValue" /></label> <br />
                     <label>Name: <input type="text"  id="nickname2"/></label> <br />
-                    <label>Secret Num: <input type="text" id="play1sec"/></label> <br />
+                    <label>Secret Num: <input type="text" id="play2sec"/></label> <br />
                     <input type="submit" value="PLAY" id="playToken"/>
                     <input type="submit" value="CANCEL" id="cancel2" />
                 </div>
@@ -115,9 +122,8 @@
         </div>
     </div>
     <script src="script/util.js"></script>
-    <script src="script/script.js"></script>
     <script src="game/gameLogic.js"></script>
-    <script src="connect/connect.js"></script>
+    <script src="script/script.js"></script>
 </body>
 
 </html>
