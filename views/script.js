@@ -13,6 +13,7 @@ const loading = document.querySelector('.loading');
 const chooseType = document.querySelector('.choose-type');
 const createGameForm = document.querySelector('.create-game-form');
 const tokenForm = document.querySelector('.token-form');
+const showToken = document.querySelector('.show-token');
 
 const cancel1 = document.querySelector('#cancel1');
 const cancel2 = document.querySelector('#cancel2');
@@ -40,7 +41,7 @@ const adjustDisplay = () => {
 };
 
 const hideEverything = () => {
-  hideClass(nav, sideNav, chat, chooseType, tokenForm, createGameForm, loading);
+  hideClass(nav, sideNav, chat, chooseType, showToken, tokenForm, createGameForm, loading);
 };
 
 const startToken = () => {
@@ -97,7 +98,6 @@ token.addEventListener('click', submitToken);
 // second screen: regsiter player 1
 
 const playCreate = document.querySelector('#playCreate');
-const showToken = document.querySelector('.show-token');
 const play1Name = document.querySelector('#nickname1');
 const tokenBox = document.querySelector('#tokenBox');
 const tokenStatus = document.querySelector('#tokenStatus');
@@ -141,7 +141,10 @@ const startGame = () => {
       peerInit.signal(player2);
       console.log('connection established');
       gameStarted = true;
+      hideEverything();
+      showClass(gameBoard, sideNav, chat);
       adjustDisplay();
+      
     });
   });
 };
@@ -187,8 +190,8 @@ const startGameJoin = () => {
       });
       // show appropraite screen
       hideEverything();
-      adjustDisplay();
       showClass(gameBoard, sideNav, chat);
+      adjustDisplay();
     });
   });
 
