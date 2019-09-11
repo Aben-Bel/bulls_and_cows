@@ -245,10 +245,12 @@ const onSubmitCommunication = (initiator) => {
         const player1 = JSON.parse(player1string);
         peer.signal(player1.webRTCid);
         generateWebRTCid(false, player1.token);
-        hideEverything();
-        showClass(gameBoard, nav, chat);
-        gameStarted = true;
-        adjustDisplay();
+        peer.on('signal', () => {
+          hideEverything();
+          showClass(gameBoard, nav, chat);
+          gameStarted = true;
+          adjustDisplay();
+        });
       });
     } else {
       socket.on('join', (tokenId) => {
