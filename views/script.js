@@ -125,6 +125,7 @@ const tbody = document.querySelector('#tbody');
 const appendIandP = (userType, guess, i, p) => {
   const lastRow = tbody.rows[tbody.children.length - 1];
   const entry = [guess, i, p, '', '', ''];
+  const entry2 = ['', '', '', guess, i, p];
 
   if (userType === 'self' && lastRow.cells[0].textContent === '') {
     lastRow.cells[0].textContent = guess;
@@ -144,9 +145,9 @@ const appendIandP = (userType, guess, i, p) => {
     tbody.appendChild(tr);
   } else if (userType === 'opponent' && lastRow.cells[3].textContent !== '' && lastRow.cells[0].textContent !== '') {
     const tr = document.createElement('TR');
-    for (let j = 5; j >= 6; j -= 1) {
+    for (let j = 0; j < 6; j += 1) {
       const td = document.createElement('TD');
-      td.textContent = entry[j];
+      td.textContent = entry2[j];
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
@@ -244,10 +245,12 @@ const onSubmitCommunication = (initiator) => {
         const player1 = JSON.parse(player1string);
         peer.signal(player1.webRTCid);
         generateWebRTCid(false, player1.token);
-        hideEverything();
-        showClass(gameBoard, nav, chat);
-        gameStarted = true;
-        adjustDisplay();
+        peer.on('signal', () => {
+          hideEverything();
+          showClass(gameBoard, nav, chat);
+          gameStarted = true;
+          adjustDisplay();
+        });
       });
     } else {
       socket.on('join', (tokenId) => {

@@ -1,4 +1,5 @@
 const express = require('express');
+const dotenv = require('dotenv').config();
 const chalk = require('chalk');
 const debug = require('debug')('app');
 const morgan = require('morgan');
@@ -7,6 +8,7 @@ const mongoose = require('mongoose');
 
 const app = express();
 const server = require('http').createServer(app);
+
 
 const port = process.env.PORT || 3000;
 const io = require('socket.io').listen(server);
@@ -88,8 +90,6 @@ io.sockets.on('connection', (socket) => {
 
   socket.on('joinGame', (data) => {
     const { webRTCid, tokenId } = JSON.parse(data);
-    console.log('offer accept id: ', webRTCid);
-    console.log('broadcasting at: ', tokenId);
     io.sockets.emit(tokenId, webRTCid);
   });
 });
