@@ -17,9 +17,27 @@ const getSec = () => { }; // return player's secret number from local storage
 
 const loadingIcon = (activate) => {
   const icon = document.querySelector('.loading');
-  if(activate) {
+  if (activate) {
     showClass(icon);
-  }else {
+  } else {
     hideClass(icon);
   }
 };
+
+const validateSecretNum = (num) => {
+  // check all char are digits
+  if (isNaN(num)) {
+    return false;
+  }
+  // four digits
+  if (num.length !== 4) {
+    return false;
+  }
+  // four unique digits
+  const [a, b, c, d] = num.split('').sort();
+  if (a === b || b === c || c === d) {
+    return false;
+  }
+
+  return true;
+}

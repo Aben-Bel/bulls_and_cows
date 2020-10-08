@@ -33,7 +33,10 @@
 
                 <div class="card create-game-form hide ">
                     <label>Name: <input type="text" id="nickname1"/></label> <br />
-                    <label>Secret Num: <input type="text" id="play1sec"/></label> <br />
+                    <label>Secret Num: <input type="number" id="play1sec" 
+                        min="1000" max="9999"
+                        placeholder="Enter unique four digit numbers"
+                        /></label> <br />
                     <input type="submit" value="PLAY" id="playCreate" />
                     <input type="submit" value="CANCEL" id="cancel1" />
                 </div>
